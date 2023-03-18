@@ -7,18 +7,19 @@ import "./SignInPage.css"
 
 const SignInPage = () => {
 
-    const signIn = UserAuth()
+    const {signIn} = UserAuth()
 
     const [signInEmail,setSignInEmail] = useState("")
     const [signInPassword,setSignInPassword] = useState("")
-    const [error,setError] = useState("")
+    //const [error,setError] = useState("")
 
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
 
+        console.log(signIn)
         e.preventDefault()
-        setError("")
+
         try {
             
             await signIn(signInEmail,signInPassword).then(async (auth) => {
@@ -26,7 +27,7 @@ const SignInPage = () => {
                 await navigate('/home/'+auth.user.uid)
             })
         } catch (e) {
-            console.log(error)
+            //console.log(error)
             console.log(e.message)
         }
     }
