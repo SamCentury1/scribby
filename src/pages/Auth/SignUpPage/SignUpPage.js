@@ -6,6 +6,7 @@ import { auth,db } from '../../../firebase-config'
 // import addImage from "../../images/addImage.png"
 
 import "./SignUpPage.css"
+import "../Auth.css"
 
 const SignUpPage = () => {
 
@@ -51,36 +52,40 @@ const SignUpPage = () => {
     }
 
     return (
-        <div className='sign-up-container'>
-            <form className="sign-up-form-container glass" onSubmit={register}>
-                <div className='sign-up-form-header'>Sign Up</div>
+        <div className='main-center-container'>
+            <form className="form-container glass" onSubmit={register}>
+                <div className='form-header'>
+                    <div className='form-header-text'>Sign Up</div>
+                </div>
 
-                <div className='sign-up-form-body'>
-                    <div className='form-body-item'>
-                        <label className='form-body-label' htmlFor="firstName">First Name</label>
-                        <input className='form-body-input' type="text" id="firstName"  />
+                <div className='form-body'>
+                    <div className='form-body-input-container'>
+                        <div className='form-body-item'>
+                            <label className='form-body-label' htmlFor="firstName">First Name</label>
+                            <input className='form-body-input' type="text" id="firstName"  />
+                        </div>
+
+                        <div className='form-body-item'>
+                            <label className='form-body-label' htmlFor="lastName">Last Name</label>
+                            <input className='form-body-input' type="text" id="lastName" />
+                        </div>      
+
+                        <div className='form-body-item'>
+                            <label className='form-body-label' htmlFor="email">Email</label>
+                            <input className='form-body-input' type="email" id="email"  />
+                        </div>
+
+                        <div className='form-body-item'>
+                            <label className='form-body-label' htmlFor="password">Password</label>
+                            <input className='form-body-input' type="password" id="password"  />
+                        </div>
                     </div>
 
-                    <div className='form-body-item'>
-                        <label className='form-body-label' htmlFor="lastName">Last Name</label>
-                        <input className='form-body-input' type="text" id="lastName" />
-                    </div>      
 
-                    <div className='form-body-item'>
-                        <label className='form-body-label' htmlFor="email">Email</label>
-                        <input className='form-body-input' type="email" id="email"  />
-                    </div>
-
-                    <div className='form-body-item'>
-                        <label className='form-body-label' htmlFor="password">Password</label>
-                        <input className='form-body-input' type="password" id="password"  />
-                    </div>
-
-
-                    <div className='form-body-item'>
-                        <button  className='form-body-button' type="submit">Sign Up</button>    
+                    <div className='form-body-controls'>
+                        <button className='form-controls-button' >Register</button>    
                     </div> 
-                    <div className='form-redirect'>
+                    <div className='form-body-redirect'>
                         <Link to={'/signin'} className='form-redirect-text' >have an account?  
                             <span className='underline'> login</span>
                         </Link>    

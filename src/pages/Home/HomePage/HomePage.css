@@ -1,0 +1,25 @@
+.homepage-container {
+    justify-content: space-evenly;
+    /* background-color: green; */
+}
+
+.homepage-body-element {
+    height: 50px;
+    width: 90%;
+    border: 1px solid black;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.homepage-body-item {
+    margin: auto;
+    width: 90%;
+    text-decoration: none;
+    color: rgb(73, 72, 72);
+    font-size: 1.5rem;
+}

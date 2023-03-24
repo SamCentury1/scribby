@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 
 // components
+import Navbar from './components/layout/Navbar';
 import SignInPage from './pages/Auth/SignInPage/SignInPage';
 import SignUpPage from './pages/Auth/SignUpPage/SignUpPage';
 import Logout from './functions/Logout';
@@ -16,6 +17,7 @@ export class App extends Component {
         return (
             <BrowserRouter>
               <div>
+                <Navbar/>
                 <Routes>
                   <Route path="/signin" element={<SignInPage/>} />
                   <Route path="/signup" element={<SignUpPage/>} />

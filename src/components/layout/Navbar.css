@@ -1,0 +1,108 @@
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v8.4.14,
+* Autoprefixer: v10.4.7
+* Browsers: last 4 version
+*/
+
+.nav-container {
+    background-color: #282c34;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
+    color: rgb(191, 206, 206);
+    height: 40px;
+    width: 99vw;
+}
+
+.navbar {
+    background-color: #282c34;
+    position: relative;
+    width: 300px;
+    /* height: 100%; */
+    list-style: none;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    height: 40px;    
+}
+
+.menu-controls  {
+    text-decoration: none;
+    position: absolute;
+    left:10px;
+    top:10px;
+    
+}
+
+.menu-controls-bars {
+    font-size: 22px;
+    color: rgb(191, 206, 206);
+}
+
+.navbar-toggle {
+    list-style: none;
+    position: relative;
+    height: 100%;
+}
+
+.nav-menu {
+    background-color: #282c34;
+    position: fixed;
+    width: 300px;
+    list-style: none;
+    height: 100%;
+    /* display: none; */
+    left:-100%;
+    -webkit-transition: 500ms;
+    -o-transition: 500ms;
+    transition: 500ms;
+    z-index: 10;
+    
+}
+
+.nav-active {
+    left: 0;
+    -webkit-transition: 350ms;
+    -o-transition: 350ms;
+    transition: 350ms;
+
+}
+
+.nav-menu-close {
+    list-style: none;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+    height: 40px;
+    
+}
+
+.menu-controls-close {
+    position: absolute;
+    left:10px;
+    top:10px;
+    font-size: 22px;
+    color: rgb(191, 206, 206);
+}
+
+
+.nav-item-container {
+    text-decoration: none;
+    list-style-type: none;
+}
+
+.nav-item {
+    font-size: 22px;
+    color: rgb(191, 206, 206); 
+    text-decoration: none !important;
+    margin-top: 10px;
+    margin-bottom:10px ;
+}
