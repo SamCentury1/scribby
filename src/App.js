@@ -11,6 +11,7 @@ import SignUpPage from './pages/Auth/SignUpPage/SignUpPage';
 import Logout from './functions/Logout';
 
 import HomePage from './pages/Home/HomePage/HomePage';
+import PlayPage from './pages/PlayPage/PlayPage';
 
 export class App extends Component {
     render() {
@@ -23,6 +24,7 @@ export class App extends Component {
                   <Route path="/signup" element={<SignUpPage/>} />
                   <Route path="/logout" element={<Logout/>} />
                   <Route path="/home/:userId" element={<HomePage/>} />
+                  <Route path="/play" element={<PlayPage/>} />
                 </Routes>
               </div>
             </BrowserRouter>
