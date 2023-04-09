@@ -1,7 +1,7 @@
-import React, { useEffect,useRef,useState } from 'react'
+import React, { useEffect,useState } from 'react'
 import "./Scoreboard.css"
 import * as  TbIcons  from "react-icons/tb";
-import {motion, animate, AnimatePresence } from 'framer-motion';
+import {motion, AnimatePresence } from 'framer-motion';
 
 const Scoreboard = ({scoreLog,state,timer}) => {
 
@@ -52,7 +52,7 @@ const Scoreboard = ({scoreLog,state,timer}) => {
                     }
                 }
                 return () => {getValue()}
-            },[from,to])
+            },[])
 
             // const ref = useRef()
             // useEffect(() => {
@@ -70,14 +70,6 @@ const Scoreboard = ({scoreLog,state,timer}) => {
             // },[from, to])
             // return <motion.div key={state.turn} className='points-display-text' ref={ref} />
 
-            const variants = {
-                active: {
-                    backgroundColor:["#d5ff00","#00FFFFFF",]
-                },
-                inactive: {
-                    backgroundColor:"rgba(0,0,0,0)"
-                }
-            }
 
 
 

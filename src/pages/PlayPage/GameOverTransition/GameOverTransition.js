@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Overlay from '../../../components/Overlay/Overlay'
 import "../PlayPage.css"
@@ -11,8 +11,6 @@ const GameOverTransition = ({state}) => {
     const {user} = UserAuth()
     const navigate = useNavigate()
     
-    const [gameData, setGameData] = useState([])
-
 
     localStorage.clear()
     useEffect(() => {

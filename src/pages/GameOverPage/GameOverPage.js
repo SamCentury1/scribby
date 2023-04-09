@@ -33,7 +33,7 @@ const GameOverPage = () => {
 
         } 
         return () => {getData()}
-    },[])
+    },[user])
 
 
     return (

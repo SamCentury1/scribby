@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import {setDoc,doc, addDoc} from 'firebase/firestore'
+import {setDoc,doc} from 'firebase/firestore'
 import { auth,db } from '../../../firebase-config'
 // import addImage from "../../images/addImage.png"
 

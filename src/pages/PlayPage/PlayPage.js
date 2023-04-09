@@ -1,23 +1,18 @@
 import React, { Component } from 'react'
 import "./PlayPage.css"
 
-import Scoreboard from '../../components/GameComponents/GameContainerComponents/Scoreboard/Scoreboard'
-import EffectsLayer from '../../components/GameComponents/GameContainerComponents/EffectsLayer/EffectsLayer'
-import RandomLetters from '../../components/GameComponents/GameContainerComponents/RandomLetters/RandomLetters'
-import GameBoard from '../../components/GameComponents/GameContainerComponents/GameBoard/GameBoard'
+
 import GameControls from '../../components/GameControls/GameControls'
 import StartGameModal from './StartGameModal/StartGameModal'
 import PauseGameModal from './PauseGameModal/PauseGameModal'
 import InnerModalModal from './InnerModalModal/InnerModalModal'
 import GameOverTransition from './GameOverTransition/GameOverTransition'
-import NewPointsEffect from '../../components/GameComponents/GameContainerComponents/EffectsLayer/NewPointsEffect/NewPointsEffect'
 import GameContainer from '../../components/GameComponents/GameContainer/GameContainer'
 
 // import the dictionary
 import dictionary from "../../data/dictionary.json"
 import letterValues from "../../data/letterValues.json"
-import { motion, AnimatePresence } from 'framer-motion'
-import Overlay from '../../components/Overlay/Overlay'
+import { AnimatePresence } from 'framer-motion'
 
 /**
  * This takes all the letters in the tilebag and picks a random one

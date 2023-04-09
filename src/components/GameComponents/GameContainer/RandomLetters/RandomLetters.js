@@ -1,17 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./RandomLetters.css"
-import {motion,AnimatePresence} from 'framer-motion'
+import {motion} from 'framer-motion'
 
-const RandomLetters = ({randomLetters,clickedElem}) => {
+const RandomLetters = ({randomLetters,clickedElem,clickedElemX, clickedElemY}) => {
 
     // console.log(clickedElemX, clickedElemY)
 
-    // const [letters,setLetters] = useState([])
-    // useEffect(() => {
-    //     setLetters(randomLetters)
-    // },[randomLetters])
-
-
+    const [letters,setLetters] = useState([])
+    useEffect(() => {
+        setLetters(randomLetters)
+    },[randomLetters])
 
     const primary_variants = {
         initial: {
@@ -88,47 +86,47 @@ const RandomLetters = ({randomLetters,clickedElem}) => {
     return (
         <div className='random-letters-layer'>
             {/* <div className='countdown-item-container'></div> */}
-            <AnimatePresence>
+            {/* <AnimatePresence> */}
 
                 <motion.div 
-                    key={randomLetters.length-2}
+                    key={`${Date.now()}_${letters.length-2}`}
                     className='first-letter-container'
                     initial={"initial"}
                     variants={primary_variants}
                     animate={"positioned"}                
                 >
-                    {randomLetters[randomLetters.length-2]}
+                    {letters[letters.length-2]}
                 </motion.div>
-            </AnimatePresence>
+            {/* </AnimatePresence> */}
 
-            <AnimatePresence>
+            {/* <AnimatePresence> */}
 
                     <motion.div 
                         mode="wait" 
                         // initial={false}
-                        key={randomLetters.length-3}
+                        key={`${Date.now()}_${letters.length-3}`}
                         className='first-letter-container illusion' 
                         initial={"initial"}
                         variants={tertiary_variants}
                         animate={"positioned"}
                         // style={{position:'absolute'}}            
                     >
-                        {randomLetters[randomLetters.length-3]}
+                        {letters[letters.length-3]}
                     </motion.div>
 
-            </AnimatePresence>
+            {/* </AnimatePresence> */}
 
-            <AnimatePresence>
+            {/* <AnimatePresence> */}
 
                 <motion.div 
-                    key={randomLetters.length-1}
+                    key={`${Date.now()}_${letters.length-1}`}
                     initial={"initial"}
                     variants={secondary_variants}
                     animate={"positioned"}
                     className='second-letter-container'>
-                    {randomLetters[randomLetters.length-1]}
+                    {letters[letters.length-1]}
                 </motion.div>
-            </AnimatePresence>
+            {/* </AnimatePresence> */}
         </div>
     )
 }
