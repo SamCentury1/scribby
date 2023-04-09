@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
-import {setDoc,doc} from 'firebase/firestore'
+import {setDoc,doc, addDoc} from 'firebase/firestore'
 import { auth,db } from '../../../firebase-config'
 // import addImage from "../../images/addImage.png"
 
@@ -37,9 +37,9 @@ const SignUpPage = () => {
             }) 
             await setDoc(doc(db, "users",res.user.uid), {
                 uid:res.user.uid,
-                firstName,
-                lastName,
-                email,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
                 photoURL: null
             })
             .then(navigate('/home/'+res.user.uid))

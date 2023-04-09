@@ -3,7 +3,7 @@ import {motion} from 'framer-motion'
 // import * as FaIcons  from 'react-icons/fa'
 import Overlay from '../../../components/Overlay/Overlay'
 
-const PauseGameModal = ({handleClose,innerModal}) => {
+const InnerModalModal = ({handleClose,handleRestart, handleCancel}) => {
 
     const dropIn = {
         hidden: {
@@ -39,20 +39,19 @@ const PauseGameModal = ({handleClose,innerModal}) => {
                 <div className='modal-header-container'>
                     <div className='modal-header-elem'>Paused</div>
                 </div>
+                <div>Are you sure you want to quit the current game?</div>
                 <div className='modal-body-container'>
-
-                    <div className='modal-option-element-1' onClick={innerModal}>
-                        <div className='modal-option-element-text'>Restart</div>
-                    </div>
-                    
-                    <div className='modal-option-element-1' onClick={handleClose}>
-                        <div className='modal-option-element-text'>Resume</div>
+                    <div className='modal-option-element-1' onClick={handleRestart}>
+                        <div className='modal-option-element-text'>Yes</div>
                     </div>
 
+                    <div className='modal-option-element-1' onClick={handleCancel}>
+                        <div className='modal-option-element-text'>No</div>
+                    </div>
                 </div>
             </motion.div>            
         </Overlay>
     )
 }
 
-export default PauseGameModal
+export default InnerModalModal

@@ -12,6 +12,7 @@ import Logout from './functions/Logout';
 
 import HomePage from './pages/Home/HomePage/HomePage';
 import PlayPage from './pages/PlayPage/PlayPage';
+import GameOverPage from './pages/GameOverPage/GameOverPage';
 
 export class App extends Component {
     render() {
@@ -25,6 +26,8 @@ export class App extends Component {
                   <Route path="/logout" element={<Logout/>} />
                   <Route path="/home/:userId" element={<HomePage/>} />
                   <Route path="/play" element={<PlayPage/>} />
+                  <Route path="/game-over" element={<GameOverPage/>} />
+
                 </Routes>
               </div>
             </BrowserRouter>

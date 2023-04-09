@@ -1,22 +1,28 @@
 import React, { Component } from 'react'
 import "./PlayPage.css"
 
-import Scoreboard from '../../components/GameComponents/Scoreboard/Scoreboard'
-import EffectsLayer from '../../components/GameComponents/EffectsLayer/EffectsLayer'
-import RandomLetters from '../../components/GameComponents/RandomLetters/RandomLetters'
-import GameBoard from '../../components/GameComponents/GameBoard/GameBoard'
-import GameControls from '../../components/GameComponents/GameControls/GameControls'
+import Scoreboard from '../../components/GameComponents/GameContainerComponents/Scoreboard/Scoreboard'
+import EffectsLayer from '../../components/GameComponents/GameContainerComponents/EffectsLayer/EffectsLayer'
+import RandomLetters from '../../components/GameComponents/GameContainerComponents/RandomLetters/RandomLetters'
+import GameBoard from '../../components/GameComponents/GameContainerComponents/GameBoard/GameBoard'
+import GameControls from '../../components/GameControls/GameControls'
 import StartGameModal from './StartGameModal/StartGameModal'
 import PauseGameModal from './PauseGameModal/PauseGameModal'
+import InnerModalModal from './InnerModalModal/InnerModalModal'
+import GameOverTransition from './GameOverTransition/GameOverTransition'
+import NewPointsEffect from '../../components/GameComponents/GameContainerComponents/EffectsLayer/NewPointsEffect/NewPointsEffect'
+import GameContainer from '../../components/GameComponents/GameContainer/GameContainer'
 
 // import the dictionary
 import dictionary from "../../data/dictionary.json"
 import letterValues from "../../data/letterValues.json"
+import { motion, AnimatePresence } from 'framer-motion'
+import Overlay from '../../components/Overlay/Overlay'
 
 /**
  * This takes all the letters in the tilebag and picks a random one
 //  */
-function generateRandomLetter2(letterState) {
+function generateRandomLetter2(letterState,randomLetters) {
 
     const tileBag = [
         {"letter":"A", "value": 1, "type":  "vowel",        "reserve":  11},
@@ -27,7 +33,7 @@ function generateRandomLetter2(letterState) {
         {"letter":"F", "value": 4, "type":  "consonant",    "reserve":  2},
         {"letter":"G", "value": 2, "type":  "consonant",    "reserve":  3},
         {"letter":"H", "value": 4, "type":  "consonant",    "reserve":  2},
-        {"letter":"I", "value": 1, "type":  "vowel",        "reserve":  11},
+        {"letter":"I", "value": 1, "type":  "vowel",        "reserve":  7},
         {"letter":"J", "value": 8, "type":  "consonant",    "reserve":  1},
         {"letter":"K", "value": 1, "type":  "consonant",    "reserve":  1},
         {"letter":"L", "value": 4, "type":  "consonant",    "reserve":  4},
@@ -47,12 +53,38 @@ function generateRandomLetter2(letterState) {
         {"letter":"Z", "value": 10, "type": "consonant",    "reserve": 1},
     ]
 
+    // get all letters from the board into an array
     let lettersOnBoard = []
     letterState.forEach(element => {
         if (element.letter !== "") {
             lettersOnBoard.push(element.letter)
         }
     })
+
+
+    // take the two last items in the randomLetters Array (the 2 upcoming random letters)
+    let twoLastRandomLetters = randomLetters.slice(-2)
+
+    
+    // concat those two letters to the array of letters
+    const allLettersAtPlay =  lettersOnBoard.concat(twoLastRandomLetters)
+
+    // create an array of vowels and an array of consonants
+    let vowelsOnBoard = []
+    let consonantsOnBoard = []
+    allLettersAtPlay.forEach((element) => {
+        const elemLetterObject = tileBag.find((obj) => obj.letter === element)
+        if (elemLetterObject.type === "vowel") {
+            vowelsOnBoard.push(element)
+        } else if (elemLetterObject.type === "consonant") {
+            consonantsOnBoard.push(element)
+        } else {
+            console.log("something wrong")
+        }
+    })
+
+    const vowelRate = vowelsOnBoard.length / allLettersAtPlay.length
+
 
     const getTileBagReserve = (elem,reserveLetters) => {
         let reserve = []
@@ -61,8 +93,8 @@ function generateRandomLetter2(letterState) {
         }
         return {"letter":elem.letter, "value": elem.value, "type": elem.type,    "reserve": reserve}
     }
-
-    const groupedLetters = lettersOnBoard.reduce((acc, currentValue) => {
+    
+    const groupedLetters = allLettersAtPlay.reduce((acc, currentValue) => {
         acc[currentValue] = acc[currentValue] || 0;
         acc[currentValue]++;
         return acc;
@@ -71,21 +103,44 @@ function generateRandomLetter2(letterState) {
 
     let updatedTileBag = []
     tileBag.forEach((elem) => {
-        const lettersOnBoard = groupedLetters[elem.letter]
-        if (lettersOnBoard) {
-        updatedTileBag.push(getTileBagReserve(elem,(elem.reserve-lettersOnBoard)))
-
+        const letterObjectsOnBoard = groupedLetters[elem.letter]
+        if (letterObjectsOnBoard) {
+            updatedTileBag.push(getTileBagReserve(elem,(elem.reserve-letterObjectsOnBoard)))
         } else {
-        updatedTileBag.push(getTileBagReserve(elem,elem.reserve))
+            updatedTileBag.push(getTileBagReserve(elem,elem.reserve))
         }
     })
 
+    // find out what the last letter was, remove that one
+    const lastLetter = twoLastRandomLetters[twoLastRandomLetters.length-1]
+
+    // find out whether to return a consonant or a vowel
+    const getLetterType = (vowelRate) => {
+        if (vowelRate >= 0.45) {
+            return 'consonant'
+        } else {
+            return 'vowel'
+        }
+    }
+
     let allLetters = []
     updatedTileBag.forEach((letter) => {
-        letter.reserve.forEach((item) => {
-            allLetters.push(item)
-        })
+        if (letter.letter === lastLetter) {
+            return false
+        } else {
+            if (letter.type === getLetterType(vowelRate)) {
+                letter.reserve.forEach((item) => {
+                    allLetters.push(item)
+                })
+            } else {
+                return false
+            }
+        }
     })
+
+
+
+
 
     
     const randomIndex = Math.floor(Math.random() * (allLetters.length))
@@ -129,7 +184,7 @@ const stringsArray = (letterState,dict) => {
                 if (getRowArray(i,j,k)) {
                     const ids = getRowArray(i,j,k)
                     if (stringIds(ids,letterState,dict)) {
-                        rowStringAddresses.push(stringIds(ids,letterState,dict))
+                        rowStringAddresses.push(stringIds(ids,letterState,dict,"row"))
                     }
                 }
             }
@@ -157,7 +212,7 @@ const stringsArray = (letterState,dict) => {
                 if (getColArray(j,i,k)) {
                     const ids = getColArray(j,i,k)
                     if (stringIds(ids,letterState,dict)) {
-                        colStringAddresses.push(stringIds(ids,letterState,dict))
+                        colStringAddresses.push(stringIds(ids,letterState,dict,"col"))
                     }                                                     
                 }
             }
@@ -172,7 +227,7 @@ const stringsArray = (letterState,dict) => {
  * ex: {"string": "CACA", "keys":["1_1","1_2","1_3","1_4"]}
  */
 
-const stringIds = (ids,letterState,dict) => {
+const stringIds = (ids,letterState,dict,axis) => {
     let string = []
     let keys = [] 
     ids.forEach(id => {
@@ -188,22 +243,34 @@ const stringIds = (ids,letterState,dict) => {
         let letterString = string.join("")
         const validWord = dict.find(item => item === letterString)
         if (validWord) {
-            return {"string":letterString,"keys":keys}
+            return {"string":letterString,"keys":keys, "axis":axis}
         } else {return null}
     }  else {return null}      
 }
 
-const tabulateWordPoints = (words) => {
+const tabulateWordPoints = (words,streak) => {
+
     let totalPoints = 0
     words.forEach((word) => {
-        // let wordValue = 0
         for (let i=0; i < word.string.length; i++) {
             const letterObject = letterValues.find((obj) => obj.letter === word.string[i])
             totalPoints = totalPoints + letterObject.value
         }
-        
     })
-    return totalPoints
+    const getUniqueAxes = (arr) => {
+        return arr.reduce((uniqueAxes, obj) => {
+            if (!uniqueAxes.includes(obj.axis)) {
+                uniqueAxes.push(obj.axis);
+            }
+            return uniqueAxes;
+        }, []);
+    };
+    const crosswordMultiplier = getUniqueAxes(words).length
+    const multiWordMultiplier = words.length
+    const streakMultiplier = streak
+
+    
+    return totalPoints * crosswordMultiplier * multiWordMultiplier * streakMultiplier
 
 }
 
@@ -216,154 +283,96 @@ class PlayPage extends Component {
         super(props)
 
         this.state = {
-            letterState: [
-                {"key":"1_1",   "row":1,  "col":1,  "letter":""},
-                {"key":"1_2",   "row":1,  "col":2,  "letter":""},
-                {"key":"1_3",   "row":1,  "col":2,  "letter":""},
-                {"key":"1_4",   "row":1,  "col":2,  "letter":""},
-                {"key":"1_5",   "row":1,  "col":2,  "letter":""},
-                {"key":"1_6",   "row":1,  "col":2,  "letter":""},
+            
+            prevLetterState:    [],
+            letterState:    [
+                {"key":"1_1",   "active":false, "selected":false, "row":1,  "col":1,  "letter":""},
+                {"key":"1_2",   "active":false, "selected":false, "row":1,  "col":2,  "letter":""},
+                {"key":"1_3",   "active":false, "selected":false, "row":1,  "col":3,  "letter":""},
+                {"key":"1_4",   "active":false, "selected":false, "row":1,  "col":4,  "letter":""},
+                {"key":"1_5",   "active":false, "selected":false, "row":1,  "col":5,  "letter":""},
+                {"key":"1_6",   "active":false, "selected":false, "row":1,  "col":6,  "letter":""},
         
-                {"key":"2_1",   "row":2,  "col":1,  "letter":""},
-                {"key":"2_2",   "row":2,  "col":2,  "letter":""},
-                {"key":"2_3",   "row":2,  "col":3,  "letter":""},
-                {"key":"2_4",   "row":2,  "col":4,  "letter":""},
-                {"key":"2_5",   "row":2,  "col":5,  "letter":""},
-                {"key":"2_6",   "row":2,  "col":6,  "letter":""},
+                {"key":"2_1",   "active":false, "selected":false, "row":2,  "col":1,  "letter":""},
+                {"key":"2_2",   "active":false, "selected":false, "row":2,  "col":2,  "letter":""},
+                {"key":"2_3",   "active":false, "selected":false, "row":2,  "col":3,  "letter":""},
+                {"key":"2_4",   "active":false, "selected":false, "row":2,  "col":4,  "letter":""},
+                {"key":"2_5",   "active":false, "selected":false, "row":2,  "col":5,  "letter":""},
+                {"key":"2_6",   "active":false, "selected":false, "row":2,  "col":6,  "letter":""},
         
-                {"key":"3_1",   "row":3,  "col":1,  "letter":""},
-                {"key":"3_2",   "row":3,  "col":2,  "letter":""},
-                {"key":"3_3",   "row":3,  "col":3,  "letter":""},
-                {"key":"3_4",   "row":3,  "col":4,  "letter":""},
-                {"key":"3_5",   "row":3,  "col":5,  "letter":""},
-                {"key":"3_6",   "row":3,  "col":6,  "letter":""},
+                {"key":"3_1",   "active":false, "selected":false, "row":3,  "col":1,  "letter":""},
+                {"key":"3_2",   "active":false, "selected":false, "row":3,  "col":2,  "letter":""},
+                {"key":"3_3",   "active":false, "selected":false, "row":3,  "col":3,  "letter":""},
+                {"key":"3_4",   "active":false, "selected":false, "row":3,  "col":4,  "letter":""},
+                {"key":"3_5",   "active":false, "selected":false, "row":3,  "col":5,  "letter":""},
+                {"key":"3_6",   "active":false, "selected":false, "row":3,  "col":6,  "letter":""},
         
-                {"key":"4_1",   "row":4,  "col":1,  "letter":""},
-                {"key":"4_2",   "row":4,  "col":2,  "letter":""},
-                {"key":"4_3",   "row":4,  "col":3,  "letter":""},
-                {"key":"4_4",   "row":4,  "col":4,  "letter":""},
-                {"key":"4_5",   "row":4,  "col":5,  "letter":""},
-                {"key":"4_6",   "row":4,  "col":6,  "letter":""},
+                {"key":"4_1",   "active":false, "selected":false, "row":4,  "col":1,  "letter":""},
+                {"key":"4_2",   "active":false, "selected":false, "row":4,  "col":2,  "letter":""},
+                {"key":"4_3",   "active":false, "selected":false, "row":4,  "col":3,  "letter":""},
+                {"key":"4_4",   "active":false, "selected":false, "row":4,  "col":4,  "letter":""},
+                {"key":"4_5",   "active":false, "selected":false, "row":4,  "col":5,  "letter":""},
+                {"key":"4_6",   "active":false, "selected":false, "row":4,  "col":6,  "letter":""},
         
-                {"key":"5_1",   "row":5,  "col":1,  "letter":""},
-                {"key":"5_2",   "row":5,  "col":2,  "letter":""},
-                {"key":"5_3",   "row":5,  "col":3,  "letter":""},
-                {"key":"5_4",   "row":5,  "col":4,  "letter":""},
-                {"key":"5_5",   "row":5,  "col":5,  "letter":""},
-                {"key":"5_6",   "row":5,  "col":6,  "letter":""},    
+                {"key":"5_1",   "active":false, "selected":false, "row":5,  "col":1,  "letter":""},
+                {"key":"5_2",   "active":false, "selected":false, "row":5,  "col":2,  "letter":""},
+                {"key":"5_3",   "active":false, "selected":false, "row":5,  "col":3,  "letter":""},
+                {"key":"5_4",   "active":false, "selected":false, "row":5,  "col":4,  "letter":""},
+                {"key":"5_5",   "active":false, "selected":false, "row":5,  "col":5,  "letter":""},
+                {"key":"5_6",   "active":false, "selected":false, "row":5,  "col":6,  "letter":""},    
                 
-                {"key":"6_1",   "row":6,  "col":1,  "letter":""},
-                {"key":"6_2",   "row":6,  "col":2,  "letter":""},
-                {"key":"6_3",   "row":6,  "col":3,  "letter":""},
-                {"key":"6_4",   "row":6,  "col":4,  "letter":""},
-                {"key":"6_5",   "row":6,  "col":5,  "letter":""},
-                {"key":"6_6",   "row":6,  "col":6,  "letter":""},  
+                {"key":"6_1",   "active":false, "selected":false, "row":6,  "col":1,  "letter":""},
+                {"key":"6_2",   "active":false, "selected":false, "row":6,  "col":2,  "letter":""},
+                {"key":"6_3",   "active":false, "selected":false, "row":6,  "col":3,  "letter":""},
+                {"key":"6_4",   "active":false, "selected":false, "row":6,  "col":4,  "letter":""},
+                {"key":"6_5",   "active":false, "selected":false, "row":6,  "col":5,  "letter":""},
+                {"key":"6_6",   "active":false, "selected":false, "row":6,  "col":6,  "letter":""},  
             ],
-
+            streak:[],
             turn:   0,
             log:    [],
-
-            //clock
-            timerOn: false,
-            timerStart: 0,
-            timerTime: 0, 
-
-            //countdown
-            countdownTimerOn: false,
-            countdownStart: 60000,
-            countdownTime:60000,
-
+            prevPoints: 0,
+            newPoints: 0,
             randomLetters: [],
             dictionary: dictionary,
             foundWords:[],
+            
             gameStarted:false,
+            gameStartTime: null,
+
             gamePaused:false,
-            modalVisible:false
-        }
-    }
 
+            gameOver:false,
+            gameOverTime: null,
 
-
-    // clock
-    startTimer = () => {
-        this.setState({
-          timerOn: true,
-          timerTime: this.state.timerTime,
-          timerStart: Date.now() - this.state.timerTime
-        });
-        this.timer = setInterval(() => {
-          this.setState({
-            timerTime: Date.now() - this.state.timerStart
-          });
-        }, 10);
-    };
-
-    stopTimer = () => {
-        this.setState({ timerOn: false });
-        clearInterval(this.timer);
-    };
-
-    resetTimer = () => {
-        this.setState({
-        timerStart: 0,
-        timerTime: 0
-        });
-    };
-
-    //countdown
-    startCountdown = () => {
-        this.setState({
-            countdownTimerOn: true,
-            countdownTime: this.state.countdownTime,
-            countdownStart: this.state.countdownTime,
-        });
-        this.countdown = setInterval(() => {
-            const newTime = this.state.countdownTime - 5;
-            if (newTime >= 0) {
-                this.setState({
-                    countdownTime:newTime
-                });
-            } else {
-                clearInterval(this.countdown)
-                this.setState({countdownTimerOn:false});
-            }
-        })
-    }
-
-    stopCountdown = () => {
-        clearInterval(this.countdown);
-        this.setState({
-            countdownTimerOn:false
-        })
-    }
-
-    resetCountdown = () => {
-        if (this.state.countdownTimerOn === false) {
-            this.setState({
-                countdownTime:this.state.countdownStart
-            })
+            modalVisible:false,
+            gameRestarted: false,
+            innerModalVisible: false,
+            clickedElem:null,
         }
     }
 
     handleTilePress = (elem) => {
         this.setState((state) => {
 
-            const clickedItemObject = this.state.letterState.find((obj) => obj.key === elem)
+            const clickedItemObject = this.state.letterState.find((obj) => obj.key === elem.key)
 
             if (clickedItemObject.letter === "") {
 
                 const turn = state.turn + 1
 
-                const newLetter = generateRandomLetter2(this.state.letterState)
+           
+
+                const newLetter = generateRandomLetter2(this.state.letterState, state.randomLetters,this.state.turn)
 
                 const randomLetters = [...state.randomLetters,newLetter]
              
                 // update the board state to reflect the new letter on the board
                 const newLetterState = state.letterState.map((tileObject) => {
-                    if (tileObject.key === elem) {
-                        return {"key":tileObject.key,   "row": tileObject.row,  "col": tileObject.col,  "letter": state.randomLetters[state.randomLetters.length-2]} 
+                    if (tileObject.key === elem.key) {
+                        return {"key":tileObject.key,"active":false, "selected":true,"row": tileObject.row,"col": tileObject.col,"letter": state.randomLetters[state.randomLetters.length-2]} 
                     } else {
-                        return tileObject
+                        return {"key":tileObject.key,"active":false, "selected":false,"row": tileObject.row,"col": tileObject.col,"letter": tileObject.letter} 
                     }
                 })
 
@@ -374,6 +383,10 @@ class PlayPage extends Component {
                         foundWordIds.push(letterObj)
                     })
                 })
+
+
+
+                const streak = foundWords.length > 0 ? state.streak + 1 : 0
                 
                 const uniqueObjects = [...new Set(foundWordIds)]
                 let uniqueIds = []
@@ -386,106 +399,244 @@ class PlayPage extends Component {
                     "turn":     turn,
                     "letter":   randomLetters[turn-1],
                     "words":    foundWords,
-                    "points":   tabulateWordPoints(foundWords)
+                    "points":   tabulateWordPoints(foundWords,streak)
                 }
-
-
+                const prevPoints = state.log.reduce(function (acc, obj) { return acc + obj.points; }, 0)
                 const log = [...state.log, turnData]
+                const newPoints = prevPoints + tabulateWordPoints(foundWords,streak)
+
+
+
+
+
+
+                const prevLetterState = newLetterState.map((tileObject) => {
+                    if (uniqueIds.length > 0) {
+                        if (uniqueIds.includes(tileObject.key)) {
+                            return {"key":tileObject.key, "active":true, "selected":tileObject.selected, "row": tileObject.row,  "col": tileObject.col,  "letter":tileObject.letter } 
+                        } else {
+                            return {"key":tileObject.key, "active":false, "selected":tileObject.selected, "row": tileObject.row,  "col": tileObject.col,  "letter": tileObject.letter} 
+                        }
+                    }else {
+                        return {"key":tileObject.key, "active":false, "selected":tileObject.selected, "row": tileObject.row,  "col": tileObject.col,  "letter": tileObject.letter} 
+                    }
+                })
 
                 const letterState = newLetterState.map((tileObject) => {
                     if (uniqueIds.length > 0) {
                         if (uniqueIds.includes(tileObject.key)) {
-                            return {"key":tileObject.key,   "row": tileObject.row,  "col": tileObject.col,  "letter": ""} 
+                            return {"key":tileObject.key, "active":false, "selected":tileObject.selected, "row": tileObject.row,  "col": tileObject.col,  "letter": ""} 
                         } else {
-                            return tileObject
+                            return {"key":tileObject.key, "active":false, "selected":tileObject.selected, "row": tileObject.row,  "col": tileObject.col,  "letter": tileObject.letter} 
                         }
                     }else {
-                        return tileObject
+                        return {"key":tileObject.key, "active":false, "selected":tileObject.selected, "row": tileObject.row,  "col": tileObject.col,  "letter": tileObject.letter} 
                     }
                 })
 
-                const countdownTime = 60000
-                return {randomLetters, letterState, foundWords, turn, log, countdownTime }
+                // check if game is over
+                let gameOver = false
+                let gameOverTime = null
+                const emptySquares = letterState.filter((obj) => obj.letter === "")
+                if (emptySquares.length === 0) {
+                    gameOver = true
+                    gameOverTime = Date.now()
+                }
+
+                    
+
+
+
+                return {randomLetters, letterState, prevLetterState, foundWords, turn, log, streak, prevPoints, newPoints, gameOver, gameOverTime }
+
+
             }
 
         })
     }
 
+    getClickedElem = (e) => {
+        this.setState({
+            clickedElem:e
+        })
+    }
 
     handleModalClose = async (elem) => {
+        
         if (this.state.modalVisible) {
-            this.startTimer()
-            this.startCountdown()
-            this.setState((state) => {
-                let modalVisible
-                    modalVisible = false
-                    return {modalVisible}
+            this.setState({
+                modalVisible:false,
+                gamePaused:false
             })
+
         } else {
-            this.stopTimer()
-            this.stopCountdown()
-            this.setState((state) => {
-                let modalVisible
-                modalVisible = true
-                return {modalVisible}
+            this.setState({
+                modalVisible:true,
+                gamePaused:true
             })
+
         }
     }
 
     // generates the two first letters
     handleStartModal = async (elem) => {
-        this.startTimer()
-        this.startCountdown()
+        // this.startTimer()
+        //this.startCountdown()
         this.setState((state) => {
             
-            let gameStarted, gamePaused
+            let gameStarted, gamePaused, gameStartTime
             if (!this.state.gameStarted) {
                 
-                
-
                 // const firstLetter = generateRandomLetter(this.state.letterState,this.state.tileBag)
-                const firstLetter = generateRandomLetter2(this.state.letterState)
+                const firstLetter = generateRandomLetter2(this.state.letterState, this.state.randomLetters)
                 // remove the letter from the tilebag
 
                 // const secondLetter = generateRandomLetter(this.state.letterState,this.state.tileBag)
-                const secondLetter = generateRandomLetter2(this.state.letterState)
+                const secondLetter = generateRandomLetter2(this.state.letterState,this.state.randomLetters)
 
                 // adding the newly generated letter to the array of random letters
                 const randomLetters = [...state.randomLetters,firstLetter,secondLetter]
 
                 gameStarted = true
                 gamePaused = false
+                gameStartTime = Date.now()
 
-                return {gameStarted, randomLetters,gamePaused}
+
+                return {gameStarted,gamePaused, randomLetters,gameStartTime}
             } 
         })
     }
 
-    render() {
+    handleRestartClick = async () => {
+        if (this.innerModalVisible === true) {
+            this.setState({
+                innerModalVisible: false,
+                modalVisible: false,
+            })
+        } else {
+            this.setState({
+                modalVisible: false,
+                innerModalVisible:  true
+            })
+        }
+    }
 
+    restartGame = () => {
+        this.setState({
+            gameRestarted:true,
+            modalVisible:false,
+            innerModalVisible:false,
+            gameOver:false,
+            gamePaused:false,
+            gameStarted:false,
+            gameStartTime:null,
+            gameOverTime:null,
+
+            prevLetterState:    [],
+            letterState:    [
+                {"key":"1_1",   "active":false, "selected":false, "row":1,  "col":1,  "letter":""},
+                {"key":"1_2",   "active":false, "selected":false, "row":1,  "col":2,  "letter":""},
+                {"key":"1_3",   "active":false, "selected":false, "row":1,  "col":3,  "letter":""},
+                {"key":"1_4",   "active":false, "selected":false, "row":1,  "col":4,  "letter":""},
+                {"key":"1_5",   "active":false, "selected":false, "row":1,  "col":5,  "letter":""},
+                {"key":"1_6",   "active":false, "selected":false, "row":1,  "col":6,  "letter":""},
+        
+                {"key":"2_1",   "active":false, "selected":false, "row":2,  "col":1,  "letter":""},
+                {"key":"2_2",   "active":false, "selected":false, "row":2,  "col":2,  "letter":""},
+                {"key":"2_3",   "active":false, "selected":false, "row":2,  "col":3,  "letter":""},
+                {"key":"2_4",   "active":false, "selected":false, "row":2,  "col":4,  "letter":""},
+                {"key":"2_5",   "active":false, "selected":false, "row":2,  "col":5,  "letter":""},
+                {"key":"2_6",   "active":false, "selected":false, "row":2,  "col":6,  "letter":""},
+        
+                {"key":"3_1",   "active":false, "selected":false, "row":3,  "col":1,  "letter":""},
+                {"key":"3_2",   "active":false, "selected":false, "row":3,  "col":2,  "letter":""},
+                {"key":"3_3",   "active":false, "selected":false, "row":3,  "col":3,  "letter":""},
+                {"key":"3_4",   "active":false, "selected":false, "row":3,  "col":4,  "letter":""},
+                {"key":"3_5",   "active":false, "selected":false, "row":3,  "col":5,  "letter":""},
+                {"key":"3_6",   "active":false, "selected":false, "row":3,  "col":6,  "letter":""},
+        
+                {"key":"4_1",   "active":false, "selected":false, "row":4,  "col":1,  "letter":""},
+                {"key":"4_2",   "active":false, "selected":false, "row":4,  "col":2,  "letter":""},
+                {"key":"4_3",   "active":false, "selected":false, "row":4,  "col":3,  "letter":""},
+                {"key":"4_4",   "active":false, "selected":false, "row":4,  "col":4,  "letter":""},
+                {"key":"4_5",   "active":false, "selected":false, "row":4,  "col":5,  "letter":""},
+                {"key":"4_6",   "active":false, "selected":false, "row":4,  "col":6,  "letter":""},
+        
+                {"key":"5_1",   "active":false, "selected":false, "row":5,  "col":1,  "letter":""},
+                {"key":"5_2",   "active":false, "selected":false, "row":5,  "col":2,  "letter":""},
+                {"key":"5_3",   "active":false, "selected":false, "row":5,  "col":3,  "letter":""},
+                {"key":"5_4",   "active":false, "selected":false, "row":5,  "col":4,  "letter":""},
+                {"key":"5_5",   "active":false, "selected":false, "row":5,  "col":5,  "letter":""},
+                {"key":"5_6",   "active":false, "selected":false, "row":5,  "col":6,  "letter":""},    
+                
+                {"key":"6_1",   "active":false, "selected":false, "row":6,  "col":1,  "letter":""},
+                {"key":"6_2",   "active":false, "selected":false, "row":6,  "col":2,  "letter":""},
+                {"key":"6_3",   "active":false, "selected":false, "row":6,  "col":3,  "letter":""},
+                {"key":"6_4",   "active":false, "selected":false, "row":6,  "col":4,  "letter":""},
+                {"key":"6_5",   "active":false, "selected":false, "row":6,  "col":5,  "letter":""},
+                {"key":"6_6",   "active":false, "selected":false, "row":6,  "col":6,  "letter":""},  
+            ],
+            streak:[],
+            turn:   0,
+            log:    [],
+            prevPoints: 0,
+            newPoints: 0,
+            randomLetters: [],
+            dictionary: dictionary,
+            foundWords:[],
+
+        })
+    }
+
+    cancelRestart = () => {
+        this.setState({
+            modalVisible:true,
+            innerModalVisible:false
+        })
+    }
+
+    render() {
         return (
+            <>
+
             <div className='main-center-container'>
-                <div className='play-page-container'>
-                    <Scoreboard scoreLog={this.state.log} timer={this.state.timerTime}/>
+                <GameContainer state={this.state} tilePress={this.handleTilePress} getClickedElem={this.getClickedElem}/>
+                {/* <div className='play-page-container'>
+                    <Scoreboard scoreLog={this.state.log} state={this.state} />
                     <EffectsLayer foundWords={this.state.foundWords}/>
-                    <RandomLetters randomLetters={this.state.randomLetters} countdown={this.state.countdownTime}/>
+                    <RandomLetters randomLetters={this.state.randomLetters} clickedElemX={this.state.clickedItemX} clickedElemY={this.state.clickedItemY} />
                     <GameBoard 
                         handleTilePress={this.handleTilePress}
+                        // getTileLocation={this.getClickedTileLocation}
                         state={this.state}
                         />
-                    <GameControls handlePauseClick={this.handleModalClose} stopTimer={this.stopTimer} stopCountdown={this.stopCountdown}/>
-                </div>
-                { this.state.modalVisible && <PauseGameModal 
-                    showModal={this.state.modalVisible} 
-                    handleClose={this.handleModalClose}
-                /> }
-                { !this.state.gameStarted && <StartGameModal 
-                    showModal={this.state.gameStarted} 
-                    handleClose={this.handleStartModal}
-                    
-                /> } 
-              
+                </div> */}
+                <GameControls handlePauseClick={this.handleModalClose}  />
             </div>
+                <AnimatePresence>
+                    { this.state.modalVisible && <PauseGameModal 
+                        showModal={this.state.modalVisible}
+                        innerModal={this.handleRestartClick}
+                        handleClose={this.handleModalClose}
+                        /> }
+                </AnimatePresence>
+                    {this.state.innerModalVisible && <InnerModalModal 
+                        showModal={this.state.innerModalVisible}
+                        handleClose={this.handleModalClose}
+                        handleRestart={this.restartGame}
+                        handleCancel={this.cancelRestart}
+                    />}
+                <AnimatePresence>
+                    { !this.state.gameStarted && <StartGameModal 
+                        showModal={this.state.gameStarted} 
+                        handleClose={this.handleStartModal}
+                    /> } 
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    { this.state.gameOver && <GameOverTransition state={this.state} />} 
+                </AnimatePresence>
+            </>
         )
     }
 }

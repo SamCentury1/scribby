@@ -44,7 +44,7 @@
 }
 
 .countdown-item-container {
-    height:             45%;
+    /* height:             45%;
     aspect-ratio:       1;
     border:             1px solid black;
     border-radius:      50%;
@@ -57,5 +57,10 @@
     flex-direction:     column;
     justify-content:    center;
     align-items:        center;
-    font-size:          2rem    
+    font-size:          2rem     */
+    position: relative;
+}
+
+.illusion {
+    position: absolute;
 }

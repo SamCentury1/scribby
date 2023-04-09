@@ -2,10 +2,11 @@ import React from 'react'
 import "./GameControls.css"
 import * as GiIcons from 'react-icons/gi'
 
-const GameControls = ({handlePauseClick, stopTimer, stopCountdown}) => {
+
+const GameControls = ({handlePauseClick}) => {
     return (
         <div className='game-controls-layer'>
-            <div onClick={() => {handlePauseClick() ; stopTimer(); stopCountdown()}}>
+            <div onClick={(e) => {handlePauseClick(e)}}>
                 <GiIcons.GiPauseButton/>
             </div>
         </div>

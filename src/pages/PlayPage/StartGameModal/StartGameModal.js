@@ -36,9 +36,16 @@ const StartGameModal = ({handleClose}) => {
                 animate="visible"
                 exit="exit"
             >
-                <div>
-                    <div>How to play</div>
-                    <button onClick={handleClose}>Start!</button>
+                <div className='modal-header-container'>
+                    <div className='modal-header-elem'>New Game</div>
+                </div>
+                <div className='modal-body-container'>
+                    <div className='modal-option-element-1'>
+                        <div className='modal-option-element-text'>How to play</div>
+                    </div>
+                    <div className='modal-option-element-1' onClick={handleClose}>
+                        <div className='modal-option-element-text'>Start</div>
+                    </div>
                 </div>
             </motion.div>            
         </Overlay>

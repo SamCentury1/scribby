@@ -23,7 +23,7 @@ const SignInPage = () => {
         try {
             
             await signIn(signInEmail,signInPassword).then(async (auth) => {
-                console.log(auth.user.uid)
+                // console.log(auth.user.uid)
                 await navigate('/home/'+auth.user.uid)
             })
         } catch (e) {
