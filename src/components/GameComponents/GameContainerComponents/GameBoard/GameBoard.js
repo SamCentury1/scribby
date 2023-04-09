@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./GameBoard.css"
-import {AnimatePresence, motion} from 'framer-motion'
+import {motion} from 'framer-motion'
 
 
 const GameBoard = ({handleTilePress,getTileLocation,state}) => {
@@ -78,7 +78,7 @@ const GameBoard = ({handleTilePress,getTileLocation,state}) => {
             setLetterState(state.letterState)
             setOverlayActive(false)
         }
-    },[state.letterState])
+    },[state.letterState, state.foundWords.length, state.prevLetterState ])
 
 
 
