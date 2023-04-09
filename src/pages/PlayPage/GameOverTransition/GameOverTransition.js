@@ -33,21 +33,19 @@ const GameOverTransition = ({state}) => {
 
         const gameDuration = state.gameOverTime - state.gameStartTime
         const saveScore = async () => {
-            if (user) {
+
                 const data = {
-                    user:           doc(db,"users",user.uid),
+                    user:           user ? doc(db,"users",user.uid) : null,
                     createdAt:      Timestamp.now(),
                     words:          words(state.log),
                     turns:          state.turn,
                     finalScore:     finalScore,
                     gameDuration:   gameDuration
-                    
                 }
                 localStorage.setItem('data',JSON.stringify(data))
                 await addDoc(collection(db,"games"),data)
-                
-            }
-            //navigate('/game-over')
+
+            
 
         }
 
