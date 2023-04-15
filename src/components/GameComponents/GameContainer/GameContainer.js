@@ -5,7 +5,7 @@ import Scoreboard from '../GameContainerComponents/Scoreboard/Scoreboard'
 import EffectsLayer from '../GameContainerComponents/EffectsLayer/EffectsLayer'
 import RandomLetters from '../GameContainerComponents/RandomLetters/RandomLetters'
 import GameBoard from '../GameContainerComponents/GameBoard/GameBoard'
-import NewPointsEffect from '../GameContainerComponents/EffectsLayer/NewPointsEffect/NewPointsEffect'
+
 
 
 
@@ -24,13 +24,6 @@ export class GameContainer extends Component {
 
             
             <div className='main-game-container'>
-                {
-                    this.props.state.foundWords.length > 0 ? 
-                        <NewPointsEffect clickedElem={this.props.state.clickedElem} log={this.props.state.log}/>
-                        :
-                        false
-                }
-
 
                 <Scoreboard scoreLog={this.props.state.log} state={this.props.state} />
                 <EffectsLayer foundWords={this.props.state.foundWords} turn={this.props.state.turn}/>

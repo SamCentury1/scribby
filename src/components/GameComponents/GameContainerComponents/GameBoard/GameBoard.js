@@ -20,10 +20,10 @@ const GameBoard = ({handleTilePress,getTileLocation,state}) => {
             borderWidth:[1,2,1,2,0],
             boxShadow:["2px 2px 0 rgba(255, 255, 255, 0.4)"],
             borderColor:['#F65E3D','#F6EB3D','#F65E3D','#F6EB3D','#000000'],
-            rotateY:["0deg","0deg","0deg","360deg","0deg"],
+            //rotateY:["0deg","0deg","0deg","360deg","0deg"],
             backgroundColor:"rgba(0,0,0,0)",
             scale:[0,1,1,1,0],
-            y:[0,-10,-10,-10,-300],
+            //y:[0,-10,-10,-10,-300],
             zIndex:[2,2,2,2,2]
         },
         inactive: {
@@ -31,18 +31,6 @@ const GameBoard = ({handleTilePress,getTileLocation,state}) => {
         }
     }
 
-    const overlayVariants = {
-        
-        active: {
-            display:'block',
-            opacity:[0,1,1,1,0],
-            duration:1
-        },
-        inactive: {
-            display:'none'
-        }
-        
-    }
 
 
     const getTileStyle = (item,words) => {
@@ -64,19 +52,18 @@ const GameBoard = ({handleTilePress,getTileLocation,state}) => {
 
 
     const [letterState, setLetterState] = useState(state.prevLetterState)
-    const [overlayActive,setOverlayActive] = useState(false)
+
     useEffect(() => {
         if (state.foundWords.length > 0) {
             setLetterState(state.prevLetterState)
-            setOverlayActive(true)
+
             const timer = setTimeout(() => {
                 setLetterState(state.letterState)
-                setOverlayActive(false)
+
             }, 1500);
             return () => clearTimeout(timer);
         } else {
             setLetterState(state.letterState)
-            setOverlayActive(false)
         }
     },[state.letterState, state.foundWords.length, state.prevLetterState ])
 
@@ -87,22 +74,7 @@ const GameBoard = ({handleTilePress,getTileLocation,state}) => {
     return (
 
         <div className='game-board-layer'>
-            {/* <AnimatePresence> */}
-            {
-                overlayActive && <motion.div 
-                className='temporary-overlay'
-                // initial={{display:'none'}}
-                variants={overlayVariants}
-                animate={"active"}
-                style={{zIndex:1}}
-                transition={
-                    {duration:1.5}
-                }
-                exit={{display:'none'}}
-            />
-            }
 
-            {/* </AnimatePresence> */}
             <div className='board-container'>
                 {
                     letterState.map((element) => {
