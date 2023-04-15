@@ -331,6 +331,13 @@ class PlayPage extends Component {
             randomLetters: [],
             dictionary: dictionary,
             foundWords:[],
+            extraLetters: [
+                {"key":"EL-1",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-2",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-3",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-4",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-5",   "active":false,   "selected":false,    "letter":""},
+            ],
             
             gameStarted:false,
             gameStartTime: null,
@@ -354,22 +361,42 @@ class PlayPage extends Component {
 
             if (clickedItemObject.letter === "") {
 
-                const turn = state.turn + 1
+                let randomLetters, playedLetter, extraLetters
 
-           
+                // check if any of the extra letters are selected
+                const selectedExtraLetter = this.state.extraLetters.find((obj) => obj.selected === true)
 
-                const newLetter = generateRandomLetter2(this.state.letterState, state.randomLetters,this.state.turn)
+                if (selectedExtraLetter) {
+                    randomLetters = state.randomLetters
+                    playedLetter = selectedExtraLetter.letter
+                    extraLetters = state.extraLetters.map((extraLetterObj) => {
+                        if (extraLetterObj.key === selectedExtraLetter.key) {
+                            return {"key": extraLetterObj.key,   "active":false,   "selected":false,    "letter": ""}
+                        } else {
+                            return {"key": extraLetterObj.key,   "active":extraLetterObj.active,   "selected":false,    "letter":extraLetterObj.letter}
+                        }
+                    })
 
-                const randomLetters = [...state.randomLetters,newLetter]
-             
-                // update the board state to reflect the new letter on the board
+                } else if (!selectedExtraLetter) {
+                    extraLetters = state.extraLetters
+
+                    const newLetter = generateRandomLetter2(this.state.letterState, state.randomLetters,this.state.turn)
+    
+                    randomLetters = [...state.randomLetters,newLetter]
+                    playedLetter = state.randomLetters[state.randomLetters.length-2]
+
+
+                }
                 const newLetterState = state.letterState.map((tileObject) => {
                     if (tileObject.key === elem.key) {
-                        return {"key":tileObject.key,"active":false, "selected":true,"row": tileObject.row,"col": tileObject.col,"letter": state.randomLetters[state.randomLetters.length-2]} 
+                        return {"key":tileObject.key,"active":false, "selected":true,"row": tileObject.row,"col": tileObject.col,"letter": playedLetter} 
                     } else {
                         return {"key":tileObject.key,"active":false, "selected":false,"row": tileObject.row,"col": tileObject.col,"letter": tileObject.letter} 
                     }
-                })
+                })    
+
+             
+                const turn = state.turn + 1
 
                 const foundWords = stringsArray(newLetterState,this.state.dictionary)
                 let foundWordIds = []
@@ -399,11 +426,6 @@ class PlayPage extends Component {
                 const prevPoints = state.log.reduce(function (acc, obj) { return acc + obj.points; }, 0)
                 const log = [...state.log, turnData]
                 const newPoints = prevPoints + tabulateWordPoints(foundWords,streak)
-
-
-
-
-
 
                 const prevLetterState = newLetterState.map((tileObject) => {
                     if (uniqueIds.length > 0) {
@@ -438,15 +460,56 @@ class PlayPage extends Component {
                     gameOverTime = Date.now()
                 }
 
-                    
-
-
-
-                return {randomLetters, letterState, prevLetterState, foundWords, turn, log, streak, prevPoints, newPoints, gameOver, gameOverTime }
+                return {randomLetters, letterState, prevLetterState, foundWords, turn, log, streak, prevPoints, newPoints, gameOver, gameOverTime, extraLetters }
 
 
             }
 
+        })
+    }
+
+    handleExtraLetterSelect = (elem) => {
+        this.setState((state) => {
+            const clickedItemObject = this.state.extraLetters.find((obj) => obj.key === elem.key)
+
+            if (clickedItemObject.letter === "") {
+
+                const newLetter = generateRandomLetter2(this.state.letterState, state.randomLetters,this.state.turn)
+
+                const randomLetters = [...state.randomLetters,newLetter]
+
+                const extraLetters = state.extraLetters.map((selectedObj) => {
+                    if (selectedObj.key === elem.key) {
+                        return {"key":selectedObj.key,   "active":true,   "selected":false,    "letter":state.randomLetters[state.randomLetters.length-2]}
+                    } else {
+                        return {"key":selectedObj.key,   "active":selectedObj.active,   "selected":false,    "letter":selectedObj.letter}
+                    }
+                })
+
+                return {randomLetters, extraLetters}
+
+            } else if (clickedItemObject.letter !== "") {
+                if (clickedItemObject.selected === true) {
+                    const extraLetters = state.extraLetters.map((selectedObj) => {
+                        if (selectedObj.key === elem.key) {
+                            return {"key":selectedObj.key,   "active":selectedObj.active,   "selected":false,    "letter":selectedObj.letter}
+                        } else {
+                            return {"key":selectedObj.key,   "active":selectedObj.active,   "selected":selectedObj.selected,    "letter":selectedObj.letter}
+                        }
+                    })
+                    return { extraLetters}
+                } else if (clickedItemObject.selected === false) {
+                    const extraLetters = state.extraLetters.map((selectedObj) => {
+                        if (selectedObj.key === elem.key) {
+                            return {"key":selectedObj.key,   "active":selectedObj.active,   "selected":true,    "letter":selectedObj.letter}
+                        } else {
+                            return {"key":selectedObj.key,   "active":selectedObj.active,   "selected":selectedObj.selected,    "letter":selectedObj.letter}
+                        }
+                    })
+                    return { extraLetters}                    
+                }
+            }
+            console.log(state)
         })
     }
 
@@ -526,7 +589,13 @@ class PlayPage extends Component {
             gameStarted:false,
             gameStartTime:null,
             gameOverTime:null,
-
+            extraLetters:[
+                {"key":"EL-1",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-2",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-3",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-4",   "active":false,   "selected":false,    "letter":""},
+                {"key":"EL-5",   "active":false,   "selected":false,    "letter":""},                
+            ],
             prevLetterState:    [],
             letterState:    [
                 {"key":"1_1",   "active":false, "selected":false, "row":1,  "col":1,  "letter":""},
@@ -596,7 +665,7 @@ class PlayPage extends Component {
             <>
 
             <div className='main-center-container'>
-                <GameContainer state={this.state} tilePress={this.handleTilePress} getClickedElem={this.getClickedElem}/>
+                <GameContainer state={this.state} tilePress={this.handleTilePress} getClickedElem={this.getClickedElem} extraLetterSelect={this.handleExtraLetterSelect}/>
                 {/* <div className='play-page-container'>
                     <Scoreboard scoreLog={this.state.log} state={this.state} />
                     <EffectsLayer foundWords={this.state.foundWords}/>

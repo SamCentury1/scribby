@@ -5,6 +5,7 @@ import Scoreboard from '../GameContainerComponents/Scoreboard/Scoreboard'
 import EffectsLayer from '../GameContainerComponents/EffectsLayer/EffectsLayer'
 import RandomLetters from '../GameContainerComponents/RandomLetters/RandomLetters'
 import GameBoard from '../GameContainerComponents/GameBoard/GameBoard'
+import ExtraLetters from '../GameContainerComponents/ExtraLetters/ExtraLetters'
 
 
 
@@ -33,7 +34,8 @@ export class GameContainer extends Component {
                     getTileLocation={this.props.getClickedElem}
                     state={this.props.state}
                     />
-        </div>
+                <ExtraLetters handleExtraLetterSelect={this.props.extraLetterSelect} getTileLocation={this.props.getClickedElem} state={this.props.state}/>
+            </div>
         )
     }
 }
