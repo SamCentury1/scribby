@@ -43,7 +43,7 @@ const GameOverTransition = ({state}) => {
                     finalScore:     finalScore,
                     gameDuration:   gameDuration
                 }
-                // localStorage.setItem('data',JSON.stringify(data))
+                localStorage.setItem('data',JSON.stringify(data))
                 setGameData(data)
 
                 if (user?.uid) {

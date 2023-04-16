@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./GameOverPage.css"
 
 // import { addDoc, collection, doc, Timestamp } from 'firebase/firestore'
@@ -8,18 +8,18 @@ import {motion} from 'framer-motion'
 
 import * as FaIcons from 'react-icons/fa'
 import * as  TbIcons  from "react-icons/tb";
-import { useLocation } from 'react-router-dom'
+// import { useLocation } from 'react-router-dom'
 
 
 
-const GameOverPage = async () => {
+const GameOverPage = () => {
 
     // const {user} = UserAuth()
 
     // const {state} = useLocation()
-    const state = useLocation()
-    console.log(state)
-    console.log(state.state)
+
+ 
+    // console.log(state.state)
 
     const getDuration = (duration) => {
         const seconds = Math.floor(duration / 1000)
@@ -28,17 +28,29 @@ const GameOverPage = async () => {
         return minutes + ":" + secondsLeft
     }
 
-    const userVar = state?.user
-    const finalScore = state?.finalScore
-    const gameDuration = getDuration(state?.gameDuration)
-    const words = state?.words
-    const turns = state?.turns
+    // const userVar = state?.state.user
+    // const finalScore = state?.state.finalScore
+    // const gameDuration = getDuration(state?.state.gameDuration)
+    // const words = state?.state.words
+    // const turns = state?.state.turns
+
+    const [gameData, setGameData] = useState(null)
+
+    useEffect(() => {
+        const getData = () => {
+            const data = localStorage.getItem('data')
+            const parsedData = JSON.parse(data)
+            setGameData(parsedData)
+        }
+        return () => {getData()}
+    },[])
+
+    console.log(gameData)
 
 
 
 
-
-    while (!state) {
+    while (!gameData) {
         return <>loading...</>
     }
     return (
@@ -64,7 +76,7 @@ const GameOverPage = async () => {
                         </div>
 
                         <div className='game-over-score-text-container'>
-                            <div className='game-over-score-points'>{finalScore}</div>
+                            <div className='game-over-score-points'>{gameData.finalScore}</div>
                             <div className='game-over-score-text'>points</div>
                         </div>
 
@@ -84,7 +96,7 @@ const GameOverPage = async () => {
                         <div>turns</div>
                         <div className='game-over-time-turns-data'>
                             <TbIcons.TbChessKnightFilled className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{turns}</div>   
+                            <div className='game-over-time-data-text'>{gameData.turns}</div>   
                         </div>
                     </motion.div>
 
@@ -97,7 +109,7 @@ const GameOverPage = async () => {
                         <div>duration</div>
                         <div className='game-over-time-duration-data'>
                             <FaIcons.FaClock className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{gameDuration}</div>                                    
+                            <div className='game-over-time-data-text'>{getDuration(gameData.gameDuration)}</div>                                    
                         </div>
                     </motion.div>
                 </div>
@@ -112,7 +124,7 @@ const GameOverPage = async () => {
                         <div className='game-over-words-data'>
                             <FaIcons.FaBook className='game-over-words-icon'/>
                             <div className='game-over-words-text'>
-                                <div className='game-over-words-text-text'>{words?.length} words</div>
+                                <div className='game-over-words-text-text'>{gameData?.words.length} words</div>
                                 <FaIcons.FaArrowRight className='game-over-words-arrow-icon'/>
                             </div>
                         </div>
@@ -127,9 +139,9 @@ const GameOverPage = async () => {
                 >
 
                     <div className='game-over-controls-btn'>
-                        {
-                            userVar ? "Back to Menu" : "Register to save score!" 
-                        }
+                        {/* {
+                            // userVar ? "Back to Menu" : "Register to save score!" 
+                        } */}
                     </div>
                 </motion.div>
             </div>
