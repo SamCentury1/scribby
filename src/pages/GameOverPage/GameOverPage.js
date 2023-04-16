@@ -17,7 +17,7 @@ const GameOverPage = () => {
 
     const [gameData, setGameData] = useState([])
     // const [userDoc,setUserDoc] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
+    // const [isLoading, setIsLoading] = useState(true)
 
 
     // const gameData = JSON.parse(localStorage.getItem('data'))
@@ -25,12 +25,10 @@ const GameOverPage = () => {
 
 
     useEffect(() => {
-        setIsLoading(true)
         const getData = async () => {
             const data = localStorage.getItem('data')
             const parsedData = JSON.parse(data)
             await setGameData(parsedData)
-            await setIsLoading(false)
         } 
         return () => {getData()}
     },[])
@@ -45,7 +43,6 @@ const GameOverPage = () => {
 
 
 
-    if (isLoading) {return <div>loading...</div>}
     return (
         <div className='main-center-container'>
             <div className='game-over-main-container'>
