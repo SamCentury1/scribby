@@ -45,7 +45,8 @@ const GameOverPage = () => {
         <div className='main-center-container'>
             {
                 isLoading ? (
-
+                    <div>loading ... </div>
+                ) : (
                 <div className='game-over-main-container'>
                     <motion.div 
                         className='game-over-header-container'
@@ -136,8 +137,6 @@ const GameOverPage = () => {
                         </div>
                     </motion.div>
                 </div>
-                ) : (
-                    <div>loading ... </div>
                 )
                 
             }
