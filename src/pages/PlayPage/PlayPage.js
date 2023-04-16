@@ -509,7 +509,6 @@ class PlayPage extends Component {
                     return { extraLetters}                    
                 }
             }
-            console.log(state)
         })
     }
 
@@ -660,7 +659,6 @@ class PlayPage extends Component {
     }
 
     render() {
-        console.log(this.state)
         return (
             <>
 

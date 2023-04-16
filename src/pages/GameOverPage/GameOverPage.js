@@ -139,7 +139,7 @@ const GameOverPage = () => {
 
                     <div className='game-over-controls-btn'>
                         {
-                            user ? "Register to save score!" : "Back to Menu" 
+                            user ? "Back to Menu" : "Register to save score!" 
                         }
                     </div>
                 </motion.div>
