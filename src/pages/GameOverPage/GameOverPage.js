@@ -2,7 +2,7 @@ import React from 'react'
 import "./GameOverPage.css"
 
 // import { addDoc, collection, doc, Timestamp } from 'firebase/firestore'
-import { UserAuth } from '../../context/AuthContext'
+//import { UserAuth } from '../../context/AuthContext'
 // import { db } from '../../firebase-config'
 import {motion} from 'framer-motion'
 
@@ -14,28 +14,10 @@ import { useLocation } from 'react-router-dom'
 
 const GameOverPage = () => {
 
-    const {user} = UserAuth()
+    // const {user} = UserAuth()
 
     const {state} = useLocation()
     console.log(state)
-    // console.log(state)
-    // const [gameData, setGameData] = useState([])
-    // const [userDoc,setUserDoc] = useState(null)
-    // const [isLoading, setIsLoading] = useState(true)
-
-
-    // const gameData = JSON.parse(localStorage.getItem('data'))
-
-
-
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         const data = localStorage.getItem('data')
-    //         const parsedData = JSON.parse(data)
-    //         await setGameData(parsedData)
-    //     } 
-    //     return () => {getData()}
-    // },[])
 
     const getDuration = (duration) => {
         const seconds = Math.floor(duration / 1000)
@@ -44,9 +26,19 @@ const GameOverPage = () => {
         return minutes + ":" + secondsLeft
     }
 
+    const userVar = state?.user
+    const finalScore = state?.finalScore
+    const gameDuration = getDuration(state?.gameDuration)
+    const words = state?.words
+    const turns = state?.turns
 
 
 
+
+
+    while (!state) {
+        return <>loading...</>
+    }
     return (
         <div className='main-center-container'>
             <div className='game-over-main-container'>
@@ -70,7 +62,7 @@ const GameOverPage = () => {
                         </div>
 
                         <div className='game-over-score-text-container'>
-                            <div className='game-over-score-points'>{state.finalScore}</div>
+                            <div className='game-over-score-points'>{finalScore}</div>
                             <div className='game-over-score-text'>points</div>
                         </div>
 
@@ -90,7 +82,7 @@ const GameOverPage = () => {
                         <div>turns</div>
                         <div className='game-over-time-turns-data'>
                             <TbIcons.TbChessKnightFilled className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{state.turns}</div>   
+                            <div className='game-over-time-data-text'>{turns}</div>   
                         </div>
                     </motion.div>
 
@@ -103,7 +95,7 @@ const GameOverPage = () => {
                         <div>duration</div>
                         <div className='game-over-time-duration-data'>
                             <FaIcons.FaClock className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{getDuration(state.gameDuration)}</div>                                    
+                            <div className='game-over-time-data-text'>{gameDuration}</div>                                    
                         </div>
                     </motion.div>
                 </div>
@@ -118,7 +110,7 @@ const GameOverPage = () => {
                         <div className='game-over-words-data'>
                             <FaIcons.FaBook className='game-over-words-icon'/>
                             <div className='game-over-words-text'>
-                                <div className='game-over-words-text-text'>{state.words?.length} words</div>
+                                <div className='game-over-words-text-text'>{words?.length} words</div>
                                 <FaIcons.FaArrowRight className='game-over-words-arrow-icon'/>
                             </div>
                         </div>
@@ -134,7 +126,7 @@ const GameOverPage = () => {
 
                     <div className='game-over-controls-btn'>
                         {
-                            user ? "Back to Menu" : "Register to save score!" 
+                            userVar ? "Back to Menu" : "Register to save score!" 
                         }
                     </div>
                 </motion.div>
