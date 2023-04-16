@@ -17,6 +17,7 @@ const GameOverPage = () => {
     const {user} = UserAuth()
 
     const {state} = useLocation()
+    console.log(state)
     // console.log(state)
     // const [gameData, setGameData] = useState([])
     // const [userDoc,setUserDoc] = useState(null)
