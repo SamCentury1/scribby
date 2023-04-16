@@ -14,12 +14,6 @@ import * as  TbIcons  from "react-icons/tb";
 
 const GameOverPage = () => {
 
-    // const {user} = UserAuth()
-
-    // const {state} = useLocation()
-
- 
-    // console.log(state.state)
 
     const getDuration = (duration) => {
         const seconds = Math.floor(duration / 1000)
@@ -28,21 +22,17 @@ const GameOverPage = () => {
         return minutes + ":" + secondsLeft
     }
 
-    // const userVar = state?.state.user
-    // const finalScore = state?.state.finalScore
-    // const gameDuration = getDuration(state?.state.gameDuration)
-    // const words = state?.state.words
-    // const turns = state?.state.turns
-
+    const [isLoading, setIsLoading] = useState(true);
     const [gameData, setGameData] = useState(null)
 
     useEffect(() => {
-        const getData = () => {
-            const data = localStorage.getItem('data')
+        async function getData() {
+            const data = await localStorage.getItem('data')
             const parsedData = JSON.parse(data)
             setGameData(parsedData)
+            setIsLoading(false);
         }
-        return () => {getData()}
+        getData()
     },[])
 
     console.log(gameData)
@@ -50,101 +40,107 @@ const GameOverPage = () => {
 
 
 
-    while (!gameData) {
-        return <>loading...</>
-    }
+
     return (
         <div className='main-center-container'>
-            <div className='game-over-main-container'>
-                <motion.div 
-                    className='game-over-header-container'
-                    initial={{y:-500}}
-                    animate={{y:0}}
-                >
-                    <div className='game-over-header-text'>Good Game!</div>
-                </motion.div>
+            {
+                isLoading ? (
 
-                <motion.div 
-                    className='game-over-score-container'
-                    initial={{scale:0}}
-                    animate={{scale:1}}
-                    transition={{delay:0.3}}
-                >
-                    <div className='game-over-score-content'>
-                        <div className='game-over-score-star-icon'>
-                            <FaIcons.FaStar className='game-over-star-icon star-icon-left'/>
-                        </div>
-
-                        <div className='game-over-score-text-container'>
-                            <div className='game-over-score-points'>{gameData.finalScore}</div>
-                            <div className='game-over-score-text'>points</div>
-                        </div>
-
-                        <div className='game-over-score-star-icon'>
-                            <FaIcons.FaStar className='game-over-star-icon star-icon-right'/>
-                        </div>
-                    </div>
-                </motion.div>
-
-                <div className='game-over-time-container'>
+                <div className='game-over-main-container'>
                     <motion.div 
-                        className='game-over-time-turns'
-                        initial={{x:-500}}
-                        animate={{x:0}}
-                        transition={{delay:0.6}}
+                        className='game-over-header-container'
+                        initial={{y:-500}}
+                        animate={{y:0}}
                     >
-                        <div>turns</div>
-                        <div className='game-over-time-turns-data'>
-                            <TbIcons.TbChessKnightFilled className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{gameData.turns}</div>   
+                        <div className='game-over-header-text'>Good Game!</div>
+                    </motion.div>
+
+                    <motion.div 
+                        className='game-over-score-container'
+                        initial={{scale:0}}
+                        animate={{scale:1}}
+                        transition={{delay:0.3}}
+                    >
+                        <div className='game-over-score-content'>
+                            <div className='game-over-score-star-icon'>
+                                <FaIcons.FaStar className='game-over-star-icon star-icon-left'/>
+                            </div>
+
+                            <div className='game-over-score-text-container'>
+                                <div className='game-over-score-points'>{gameData.finalScore}</div>
+                                <div className='game-over-score-text'>points</div>
+                            </div>
+
+                            <div className='game-over-score-star-icon'>
+                                <FaIcons.FaStar className='game-over-star-icon star-icon-right'/>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <div className='game-over-time-container'>
+                        <motion.div 
+                            className='game-over-time-turns'
+                            initial={{x:-500}}
+                            animate={{x:0}}
+                            transition={{delay:0.6}}
+                        >
+                            <div>turns</div>
+                            <div className='game-over-time-turns-data'>
+                                <TbIcons.TbChessKnightFilled className='game-over-time-data-icon'/>
+                                <div className='game-over-time-data-text'>{gameData.turns}</div>   
+                            </div>
+                        </motion.div>
+
+                        <motion.div 
+                            className='game-over-time-duration'
+                            initial={{x:500}}
+                            animate={{x:0}}
+                            transition={{delay:0.9}}
+                        >
+                            <div>duration</div>
+                            <div className='game-over-time-duration-data'>
+                                <FaIcons.FaClock className='game-over-time-data-icon'/>
+                                <div className='game-over-time-data-text'>{getDuration(gameData.gameDuration)}</div>                                    
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    <motion.div 
+                        className='game-over-words-container'
+                        initial={{y:500}}
+                        animate={{y:0}}
+                        transition={{delay:1.2}}
+                    >
+                        <div className='game-over-words-card'>
+                            <div className='game-over-words-data'>
+                                <FaIcons.FaBook className='game-over-words-icon'/>
+                                <div className='game-over-words-text'>
+                                    <div className='game-over-words-text-text'>{gameData?.words.length} words</div>
+                                    <FaIcons.FaArrowRight className='game-over-words-arrow-icon'/>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
 
                     <motion.div 
-                        className='game-over-time-duration'
-                        initial={{x:500}}
-                        animate={{x:0}}
-                        transition={{delay:0.9}}
+                        className='game-over-controls-container'
+                        initial={{opacity:0}}
+                        animate={{opacity:1}}
+                        transition={{delay:2}}
                     >
-                        <div>duration</div>
-                        <div className='game-over-time-duration-data'>
-                            <FaIcons.FaClock className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{getDuration(gameData.gameDuration)}</div>                                    
+
+                        <div className='game-over-controls-btn'>
+                            {/* {
+                                // userVar ? "Back to Menu" : "Register to save score!" 
+                            } */}
                         </div>
                     </motion.div>
                 </div>
-
-                <motion.div 
-                    className='game-over-words-container'
-                    initial={{y:500}}
-                    animate={{y:0}}
-                    transition={{delay:1.2}}
-                >
-                    <div className='game-over-words-card'>
-                        <div className='game-over-words-data'>
-                            <FaIcons.FaBook className='game-over-words-icon'/>
-                            <div className='game-over-words-text'>
-                                <div className='game-over-words-text-text'>{gameData?.words.length} words</div>
-                                <FaIcons.FaArrowRight className='game-over-words-arrow-icon'/>
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
-
-                <motion.div 
-                    className='game-over-controls-container'
-                    initial={{opacity:0}}
-                    animate={{opacity:1}}
-                    transition={{delay:2}}
-                >
-
-                    <div className='game-over-controls-btn'>
-                        {/* {
-                            // userVar ? "Back to Menu" : "Register to save score!" 
-                        } */}
-                    </div>
-                </motion.div>
-            </div>
+                ) : (
+                    <div>loading ... </div>
+                )
+                
+            }
         </div>
     )
     
