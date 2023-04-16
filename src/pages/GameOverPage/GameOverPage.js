@@ -19,6 +19,7 @@ const GameOverPage = async () => {
     // const {state} = useLocation()
     const state = useLocation()
     console.log(state)
+    console.log(state.state)
 
     const getDuration = (duration) => {
         const seconds = Math.floor(duration / 1000)
