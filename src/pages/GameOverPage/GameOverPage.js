@@ -12,11 +12,12 @@ import { useLocation } from 'react-router-dom'
 
 
 
-const GameOverPage = () => {
+const GameOverPage = async () => {
 
     // const {user} = UserAuth()
 
-    const {state} = useLocation()
+    // const {state} = useLocation()
+    const state = useLocation()
     console.log(state)
 
     const getDuration = (duration) => {
