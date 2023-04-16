@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Overlay from '../../../components/Overlay/Overlay'
 import "../PlayPage.css"
@@ -11,6 +11,7 @@ const GameOverTransition = ({state}) => {
     const {user} = UserAuth()
     const navigate = useNavigate()
     
+    const [gameData,setGameData] = useState([])
 
     localStorage.clear()
     useEffect(() => {
@@ -42,7 +43,8 @@ const GameOverTransition = ({state}) => {
                     finalScore:     finalScore,
                     gameDuration:   gameDuration
                 }
-                localStorage.setItem('data',JSON.stringify(data))
+                // localStorage.setItem('data',JSON.stringify(data))
+                setGameData(data)
 
                 if (user?.uid) {
                     await addDoc(collection(db,"games"),data)
@@ -66,10 +68,15 @@ const GameOverTransition = ({state}) => {
 
     useEffect(() => {
         const redirect = setTimeout(() => {
-                navigate('/game-over')
+                navigate(
+                    '/game-over', 
+                    {
+                        state:gameData
+                    }
+                )
             },1500)            
         return () => clearTimeout(redirect);
-    },[navigate])
+    },[navigate,gameData])
 
     return (
 

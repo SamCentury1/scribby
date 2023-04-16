@@ -6,6 +6,12 @@ const SignedOutLinks = ({closeSideNav}) => {
     return (
         <ul className='nav-item-container'>
             <li className='nav-item'>
+                <NavLink className='nav-item' onClick={() => {closeSideNav()}} to="/play">
+                <span>Play</span>
+                </NavLink>
+            </li>
+
+            <li className='nav-item'>
                 <NavLink className='nav-item' onClick={() => {closeSideNav()}} to="/signup">
                     <span>Sign Up</span>
                 </NavLink>
@@ -15,6 +21,7 @@ const SignedOutLinks = ({closeSideNav}) => {
                 <span>Sign In</span>
                 </NavLink>
             </li>
+
         </ul>
     )
 }

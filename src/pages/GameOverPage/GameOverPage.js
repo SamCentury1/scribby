@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import "./GameOverPage.css"
 
 // import { addDoc, collection, doc, Timestamp } from 'firebase/firestore'
@@ -8,6 +8,7 @@ import {motion} from 'framer-motion'
 
 import * as FaIcons from 'react-icons/fa'
 import * as  TbIcons  from "react-icons/tb";
+import { useLocation } from 'react-router-dom'
 
 
 
@@ -15,7 +16,9 @@ const GameOverPage = () => {
 
     const {user} = UserAuth()
 
-    const [gameData, setGameData] = useState([])
+    const {state} = useLocation()
+    // console.log(state)
+    // const [gameData, setGameData] = useState([])
     // const [userDoc,setUserDoc] = useState(null)
     // const [isLoading, setIsLoading] = useState(true)
 
@@ -24,14 +27,14 @@ const GameOverPage = () => {
 
 
 
-    useEffect(() => {
-        const getData = async () => {
-            const data = localStorage.getItem('data')
-            const parsedData = JSON.parse(data)
-            await setGameData(parsedData)
-        } 
-        return () => {getData()}
-    },[])
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         const data = localStorage.getItem('data')
+    //         const parsedData = JSON.parse(data)
+    //         await setGameData(parsedData)
+    //     } 
+    //     return () => {getData()}
+    // },[])
 
     const getDuration = (duration) => {
         const seconds = Math.floor(duration / 1000)
@@ -66,7 +69,7 @@ const GameOverPage = () => {
                         </div>
 
                         <div className='game-over-score-text-container'>
-                            <div className='game-over-score-points'>{gameData.finalScore}</div>
+                            <div className='game-over-score-points'>{state.finalScore}</div>
                             <div className='game-over-score-text'>points</div>
                         </div>
 
@@ -86,7 +89,7 @@ const GameOverPage = () => {
                         <div>turns</div>
                         <div className='game-over-time-turns-data'>
                             <TbIcons.TbChessKnightFilled className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{gameData.turns}</div>   
+                            <div className='game-over-time-data-text'>{state.turns}</div>   
                         </div>
                     </motion.div>
 
@@ -99,7 +102,7 @@ const GameOverPage = () => {
                         <div>duration</div>
                         <div className='game-over-time-duration-data'>
                             <FaIcons.FaClock className='game-over-time-data-icon'/>
-                            <div className='game-over-time-data-text'>{getDuration(gameData.gameDuration)}</div>                                    
+                            <div className='game-over-time-data-text'>{getDuration(state.gameDuration)}</div>                                    
                         </div>
                     </motion.div>
                 </div>
@@ -114,7 +117,7 @@ const GameOverPage = () => {
                         <div className='game-over-words-data'>
                             <FaIcons.FaBook className='game-over-words-icon'/>
                             <div className='game-over-words-text'>
-                                <div className='game-over-words-text-text'>{gameData.words?.length} words</div>
+                                <div className='game-over-words-text-text'>{state.words?.length} words</div>
                                 <FaIcons.FaArrowRight className='game-over-words-arrow-icon'/>
                             </div>
                         </div>
