@@ -43,9 +43,10 @@ const GameOverTransition = ({state}) => {
                     gameDuration:   gameDuration
                 }
                 localStorage.setItem('data',JSON.stringify(data))
-                await addDoc(collection(db,"games"),data)
 
-            
+                if (user.uid) {
+                    await addDoc(collection(db,"games"),data)
+                }   
 
         }
 
