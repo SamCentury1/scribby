@@ -1,0 +1,203 @@
+.game-over-main-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-over-header-container {
+    height: 20%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3.5rem;
+    text-align: center;
+}
+
+.game-over-score-container {
+    height: 20%;
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-over-score-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height:80%;
+    border: 1px solid black;
+    position: relative;
+    border-radius: 50%;
+    background-color: rgba(82, 82, 82, 0.7);
+}
+
+.game-over-score-points {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 4rem;
+    text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+}
+
+.game-over-score-text {
+    text-align: center;
+    font-size: 1rem;
+}
+
+.game-over-star-icon {
+    font-size: 2.5rem;
+    position: absolute;
+
+}
+
+.star-icon-left {
+    transform: translate(0%, -50%) rotate(50deg);
+    left:5%;
+    top:50%;
+}
+
+
+.star-icon-right {
+    transform: translate(0%, -50%) rotate(-50deg);
+    right:5%;
+    top:50%;
+}
+
+
+.game-over-time-container {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.game-over-time-turns {
+    width: 35%;
+    border: 1px solid green;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px ;
+}
+.game-over-time-turns-data {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:center ;
+    
+}
+
+.game-over-time-data-icon {
+    font-size: 2rem;
+    width: 30%;
+}
+
+.game-over-time-data-text {
+    font-size: 2rem;
+    width: 70%;
+    text-align: center;
+}
+
+.game-over-time-duration {
+    width: 55%;
+    border: 1px solid orange;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px ;
+}
+
+.game-over-time-duration-data {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:center ;
+}
+
+.game-over-words-container {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:flex-start ;
+}
+
+.game-over-words-card {
+    width: 95%;
+    height: 40%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 5px ;
+}
+
+.game-over-words-data {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.game-over-words-icon {
+    font-size: 2rem;
+    width: 20%;
+}
+.game-over-words-text {
+    width: 60%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.game-over-words-text-text {
+    font-size: 2rem;
+    width: 80%;
+}
+.game-over-words-arrow-icon {
+    font-size: 1rem;
+    width: 10%;
+
+}
+
+
+.game-over-controls-container {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.game-over-controls-btn {
+    width: 80%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid pink;
+    border-radius: 5px ;
+}
