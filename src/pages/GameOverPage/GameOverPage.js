@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./GameOverPage.css"
 
 // import { addDoc, collection, doc, Timestamp } from 'firebase/firestore'
@@ -15,32 +15,25 @@ const GameOverPage = () => {
 
     const {user} = UserAuth()
 
-    // const [gameData, setGameData] = useState([])
+    const [gameData, setGameData] = useState([])
     // const [userDoc,setUserDoc] = useState(null)
-    // const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
 
 
-    const gameData = JSON.parse(localStorage.getItem('data'))
-
-    // useEffect(() => {
-    //     setIsLoading(true)
-    //     const getData = async () => {
-    //         const data = localStorage.getItem('data')
-    //         const parsedData = JSON.parse(data)
-    //         await setGameData(parsedData)
-
-    //         if (user) {
-    //             const userDocRef = await getDoc(doc(db, "users", user.uid))
-    //             if (userDocRef.exists()) {
-    //                 await setUserDoc(userDocRef.data())
-    //             }
-    //         }
+    // const gameData = JSON.parse(localStorage.getItem('data'))
 
 
-    //         await setIsLoading(false)
-    //     } 
-    //     return () => {getData()}
-    // },[user])
+
+    useEffect(() => {
+        setIsLoading(true)
+        const getData = async () => {
+            const data = localStorage.getItem('data')
+            const parsedData = JSON.parse(data)
+            await setGameData(parsedData)
+            await setIsLoading(false)
+        } 
+        return () => {getData()}
+    },[])
 
     const getDuration = (duration) => {
         const seconds = Math.floor(duration / 1000)
@@ -52,6 +45,7 @@ const GameOverPage = () => {
 
 
 
+    if (isLoading) {return <div>loading...</div>}
     return (
         <div className='main-center-container'>
             <div className='game-over-main-container'>

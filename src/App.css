@@ -46,7 +46,7 @@ body {
 .main-center-container {
   border: 1px solid black;
   width: clamp(320px, 90%,500px);
-  height: 95vh;
+  height: 90vh;
   margin: auto;
   display: flex;
   flex-direction: column;
